@@ -1,11 +1,11 @@
-# Retail Supply Chain Optimization: Maximizing Daily Profit 🚛
+# Retail Supply Chain Optimization: Maximizing Daily Profit 🚛📦
 
 ![Status](https://img.shields.io/badge/Status-Validated-success)
 ![Profit](https://img.shields.io/badge/Daily_Profit-$56,811-green)
 ![Stack](https://img.shields.io/badge/Tech-AMPL_|_Gurobi_|_Python-red)
 
 ## 📄 Executive Summary
-**The Challenge:** A retail chain needed to optimize its expansion strategy for a 40-store network. The problem required simultaneous decisions on Facility Location (where to open warehouses), Inventory Managementprice (stocking levels), Pricing (demand elasticity), and Logistics (Vehicle Routing).
+**The Challenge:** A retail chain needed to optimize its expansion strategy for a 40-store network. The problem required simultaneous decisions on Facility Location (where to open warehouses), Inventory Management (stocking levels), Pricing (demand elasticity), and Logistics (Vehicle Routing).
 
 **The Solution:** We developed a **Decomposition-Based Optimization Framework**. Instead of solving one intractable Mixed-Integer Non-Linear Program (MINLP), we decoupled strategic decisions (Location/Pricing) from operational decisions (Routing), solving them sequentially using AMPL and Python heuristics.
 
@@ -13,6 +13,18 @@
 * **Profit Maximization:** Achieved a daily profit of **$56,811**, outperforming the baseline ($48,000) by **18.3%**.
 * **Strategic Selectivity:** Proved that opening only 4 strategic warehouses (vs. the naive "coverage" approach) reduced fixed costs by 40% while maintaining delivery speed.
 * **Validation:** All routes were verified against a strict feasibility checker (`solution_validator.ipynb`) to ensure 0 violations of vehicle capacity or time windows.
+
+---
+
+## 💰 Profit Composition
+Our final profit of **$56,811** was achieved by balancing aggressive revenue targets with lean operational costs.
+
+| Component | Daily Value | Notes |
+|-----------|-------------|-------|
+| **Revenue** | $98,450 | Based on optimal pricing and full store coverage |
+| Transportation Cost | -$28,120 | Fuel + driver wages for 4 warehouse operations |
+| Warehouse Rent | -$13,519 | 4 facilities @ avg $3,380/day |
+| **Net Profit** | **$56,811** | **18.3% improvement over baseline** |
 
 ---
 
@@ -31,8 +43,8 @@ We broke the problem into a "Hierarchical Optimization" structure:
 We formulated a Mixed-Integer Linear Program (MILP) to solve the high-level strategy.
 * **Objective:** Maximize (Revenue - Warehouse Rent - Estimated Transport Cost).
 * **Decisions:** Which warehouses to open? What price to set?
-* **Approximation:** We used a "Star Approximation" for routing costs to make the MILP solvable.
-* **Outcome:** Selected Warehouses **3, 4, 6, and 7** and established a uniform pricing strategy.
+* **Outcome:** Selected Warehouses **3, 4, 6, and 7**.
+* **Why these 4?** These specific locations acted as optimal geographic hubs—minimizing the "last-mile" distance to dense store clusters while avoiding the high rental premiums of central city warehouses.
 
 #### Phase 2: Operational Routing (Python Heuristics)
 With warehouse locations fixed, we solved the detailed VRP.
@@ -79,11 +91,24 @@ This decomposition framework is standard in modern Supply Chain Engineering:
     ```bash
     git clone [https://github.com/kunalrc33xx/retail-supply-chain-optimization.git](https://github.com/kunalrc33xx/retail-supply-chain-optimization.git)
     ```
-2.  **Run the Optimization (Requires License):**
-    Open `optimization_solver.ipynb`. This notebook contains the AMPL model strings and Gurobi solver calls to generate the `routes.txt`.
-3.  **Run the Validator (Open Access):**
-    Open `solution_validator.ipynb`. This script reads our generated text files (`routes.txt`, `stores.txt`) and mathematically verifies that our solution is valid (feasible) and calculates the exact profit.
-    * *Expected Output:* `Solution is FEASIBLE. Profit achieved: 56811.23`
+
+2.  **Run the Optimization (Requires AMPL/Gurobi License):**
+    Open `optimization_solver.ipynb`. This notebook contains the AMPL model strings and Gurobi solver calls to generate the strategic plan.
+
+3.  **Validation Only (No License Needed):**
+    If you don't have AMPL access, open `solution_validator.ipynb` instead. This reads our pre-computed solution files (`routes.txt`, `stores.txt`, `warehouses.txt`) and mathematically verifies feasibility and profit.
+    * **Expected Output:** `Solution is FEASIBLE. Profit achieved: 56811.23`
+
+4.  **View Full Technical Report:**
+    See `Project_Report.pdf` for the complete mathematical formulation and sensitivity analysis.
+
+---
+
+## 🧠 Skills Demonstrated
+* **Linear Programming (MILP):** Formulating complex objective functions and constraints in AMPL.
+* **Decomposition Algorithms:** Breaking NP-Hard problems into solvable stages (Strategic vs. Operational).
+* **Heuristic Design:** Writing custom Python algorithms (Nearest Neighbor) to solve routing challenges.
+* **Supply Chain Analytics:** Balancing trade-offs between fixed asset costs (Rent) and variable logistics costs (Transport).
 
 ---
 *This project was completed as part of BUDT732: Decision Analytics at the University of Maryland.*
